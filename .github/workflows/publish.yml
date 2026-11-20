@@ -1,0 +1,79 @@
+# vX.Y.Z tag: package the .vsix, publish to the VS Code Marketplace and
+# Open VSX via trusted publishing (no secrets), attach it to a GitHub
+# release. Rerun by hand to finish a half-done release; versions already
+# published are skipped.
+name: Publish / Extension to the marketplaces
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: tag to release, e.g. v0.1.0
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to VS Code Marketplace and Open VSX
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      # the GitHub release
+      contents: write
+      # the OIDC token for both registries
+      id-token: write
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.TAG }}
+          persist-credentials: false
+      - name: Install Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Check the tag against package.json
+        run: |
+          v=$(node -p 'require("./package.json").version')
+          if [ "v$v" != "$TAG" ]; then
+            echo "tag $TAG, package.json $v: bump package.json or retag" >&2
+            exit 1
+          fi
+          echo "VSIX=nabi-$v.vsix" >> "$GITHUB_ENV"
+
+      - name: Install npm dependencies
+        run: npm ci
+      - name: Compile the extension
+        run: npm run compile
+      - name: Check grammars with sync-grammar.mjs
+        run: node scripts/sync-grammar.mjs --check
+      - name: Package the .vsix
+        run: npm run package -- --out "$VSIX"
+      - name: List the .vsix contents
+        run: npx vsce ls
+
+      - name: Publish to the VS Code Marketplace
+        run: npx vsce publish --oidc --skip-duplicate --packagePath "$VSIX"
+
+      - name: Publish to Open VSX
+        run: npx ovsx publish --trusted-publishing --skip-duplicate "$VSIX"
+
+      - name: Attach the .vsix to the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$VSIX" --clobber
+          else
+            gh release create "$TAG" "$VSIX" \
+              --title "$TAG" \
+              --notes "See [CHANGELOG.md](https://github.com/nabi-lang/nabi.vscode/blob/$TAG/CHANGELOG.md)."
+          fi

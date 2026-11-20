@@ -1,0 +1,251 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "NABION",
+  "scopeName": "source.nabion",
+  "fileTypes": [
+    "nabion"
+  ],
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#string"
+    },
+    {
+      "include": "#char"
+    },
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#constant"
+    },
+    {
+      "include": "#field"
+    },
+    {
+      "include": "#type"
+    },
+    {
+      "include": "#namespace"
+    },
+    {
+      "include": "#punctuation"
+    },
+    {
+      "include": "#ident"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.nabion",
+          "match": "(//).*$",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.comment.nabion"
+            }
+          }
+        },
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "block-comment": {
+      "name": "comment.block.nabion",
+      "begin": "/\\*",
+      "end": "\\*/",
+      "captures": {
+        "0": {
+          "name": "punctuation.definition.comment.nabion"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.raw.nabion",
+          "begin": "(?<![\\p{L}\\p{N}_])(r)(#*)(\")",
+          "end": "(\")(\\2)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.string.nabion"
+            },
+            "3": {
+              "name": "punctuation.definition.string.begin.nabion"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.nabion"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.double.nabion",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.nabion"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.nabion"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape"
+            }
+          ]
+        }
+      ]
+    },
+    "escape": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.nabion",
+          "match": "\\\\(?:[\\\\\"'nrt0]|x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|$)"
+        },
+        {
+          "name": "invalid.illegal.escape.nabion",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "char": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.char.nabion",
+          "match": "(')(\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|.)|[^'\\\\\\n])(')",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.string.begin.nabion"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#escape"
+                }
+              ]
+            },
+            "3": {
+              "name": "punctuation.definition.string.end.nabion"
+            }
+          }
+        }
+      ]
+    },
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])0[xX][0-9A-Fa-f_]+(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.binary.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])0[bB][01_]+(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.octal.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])0[oO][0-7_]+(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.float.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])[0-9][0-9_]*(?:\\.(?![.\\p{L}_])(?:[0-9][0-9_]*)?(?:[eE][+-]?[0-9][0-9_]*)?|[eE][+-]?[0-9][0-9_]*)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.decimal.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])[0-9][0-9_]*(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])(?:true|false)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.language.none.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])(?:none)(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "field": {
+      "comment": "a field name: any identifier before a single :",
+      "name": "support.type.property-name.nabion",
+      "match": "(?<![\\p{L}\\p{N}_])(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*:(?!:))"
+    },
+    "type": {
+      "patterns": [
+        {
+          "name": "entity.name.type.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])\\p{Lu}[\\p{L}\\p{N}_]*"
+        }
+      ]
+    },
+    "namespace": {
+      "patterns": [
+        {
+          "name": "entity.name.namespace.nabion",
+          "match": "(?<![\\p{L}\\p{N}_])(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=::)"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.namespace.nabion",
+          "match": "::"
+        },
+        {
+          "name": "keyword.operator.arithmetic.nabion",
+          "match": "-"
+        },
+        {
+          "name": "punctuation.separator.colon.nabion",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.accessor.nabion",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.separator.comma.nabion",
+          "match": ","
+        },
+        {
+          "name": "punctuation.terminator.statement.nabion",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.brackets.round.nabion",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.brackets.square.nabion",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.brackets.curly.nabion",
+          "match": "[{}]"
+        }
+      ]
+    },
+    "ident": {
+      "name": "variable.other.nabion",
+      "match": "[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*"
+    }
+  }
+}

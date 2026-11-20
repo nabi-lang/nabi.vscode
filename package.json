@@ -1,0 +1,143 @@
+{
+  "name": "nabi",
+  "displayName": "Nabi",
+  "description": "Nabi language support: syntax highlighting and the nabils language server",
+  "version": "0.1.0",
+  "publisher": "nabi-lang",
+  "license": "MIT OR Apache-2.0",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#1F1B1E",
+    "theme": "dark"
+  },
+  "homepage": "https://nabi-lang.org",
+  "bugs": {
+    "url": "https://github.com/nabi-lang/nabi.vscode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nabi-lang/nabi.vscode"
+  },
+  "pricing": "Free",
+  "keywords": [
+    "nabi",
+    "nabion",
+    "nabils",
+    "language server",
+    "lsp",
+    "syntax highlighting"
+  ],
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Linters"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "nabi",
+        "aliases": [
+          "Nabi"
+        ],
+        "extensions": [
+          ".nabi"
+        ],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "nabion",
+        "aliases": [
+          "NABION"
+        ],
+        "extensions": [
+          ".nabion"
+        ],
+        "filenames": [
+          "nabi.lock"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nabi",
+        "scopeName": "source.nabi",
+        "path": "./syntaxes/nabi.tmLanguage.json"
+      },
+      {
+        "language": "nabion",
+        "scopeName": "source.nabion",
+        "path": "./syntaxes/nabion.tmLanguage.json"
+      }
+    ],
+    "semanticTokenScopes": [
+      {
+        "language": "nabi",
+        "scopes": {
+          "macro": [
+            "entity.name.function.macro.nabi",
+            "support.function.macro",
+            "entity.name.function"
+          ],
+          "decorator": [
+            "entity.name.decorator.nabi",
+            "storage.type.annotation",
+            "meta.decorator"
+          ],
+          "keyword": [
+            "keyword.control.nabi",
+            "keyword.other"
+          ],
+          "operator": [
+            "keyword.operator.nabi",
+            "keyword.operator"
+          ]
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "nabi.restartServer",
+        "title": "Restart the Language Server",
+        "category": "Nabi"
+      }
+    ],
+    "configuration": {
+      "title": "Nabi",
+      "properties": {
+        "nabi.server.path": {
+          "type": "string",
+          "default": "nabils",
+          "description": "Path to the Nabi language server (nabils). On PATH by default."
+        },
+        "nabi.server.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run the Nabi language server for diagnostics, hover, completion, go-to-definition and the rest."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./ --noEmit && esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --target=node20 --minify",
+    "test": "npm run compile && esbuild src/test/run.ts src/test/suite.ts --outdir=out/test --format=cjs --platform=node --target=node20 && node out/test/run.js",
+    "package": "vsce package --skip-license",
+    "sync-grammar": "node scripts/sync-grammar.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/vscode": "1.82.0",
+    "@vscode/test-electron": "3.1.0",
+    "@vscode/vsce": "4.1.0",
+    "esbuild": "0.28.2",
+    "ovsx": "1.3.0",
+    "typescript": "5.9.3",
+    "vscode-languageclient": "9.0.1"
+  }
+}
