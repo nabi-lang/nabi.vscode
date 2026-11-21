@@ -15,7 +15,7 @@ permissions:
 jobs:
   dco:
     name: DCO
-    uses: nabi-lang/.github/.github/workflows/reusable-dco.yml@v1.0.2
+    uses: nabi-lang/.github/.github/workflows/reusable-dco.yml@v1.0.3
 
   # syntaxes/ must be nabi-syntax's grammars at the commit in nabi-syntax.rev.
   grammar:
@@ -79,7 +79,7 @@ jobs:
           node-version: 24
           cache: npm
       - name: Install Nabi from the test fixture pin
-        uses: nabi-lang/.github/actions/install-nabi@v1.0.2
+        uses: nabi-lang/.github/actions/install-nabi@v1.0.3
         with:
           pin: test/fixture/nabi.nabion
       - name: Install npm dependencies
