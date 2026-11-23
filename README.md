@@ -2,7 +2,7 @@
 
 # Nabi for Visual Studio Code
 
-[![CI](https://github.com/nabi-lang/nabi.vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/nabi-lang/nabi.vscode/actions/workflows/ci.yml) [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/nabi-lang.nabi?label=marketplace)](https://marketplace.visualstudio.com/items?itemName=nabi-lang.nabi) [![Open VSX](https://img.shields.io/open-vsx/v/nabi-lang/nabi?label=open%20vsx)](https://open-vsx.org/extension/nabi-lang/nabi) [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](#license)
+[![CI](https://github.com/nabi-lang/nabi.vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/nabi-lang/nabi.vscode/actions/workflows/ci.yml) [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](#license)
 
 Nabi language support: syntax highlighting for `.nabi` and `.nabion`, and the
 Nabi language server `nabils`.
@@ -27,6 +27,19 @@ Nabi language server `nabils`.
 - One server for every folder of a multi-root workspace; each file is
   checked against its own package.
 - **Nabi: Restart the Language Server** in the command palette.
+
+## Install
+
+Not on the VS Code Marketplace or Open VSX yet. Build the `.vsix` from this
+repository (Node 24 or newer) and install it:
+
+```sh
+git clone https://github.com/nabi-lang/nabi.vscode && cd nabi.vscode
+npm ci && npm run package
+code --install-extension nabi-0.1.0.vsix
+```
+
+Each CI run on `main` also uploads the `.vsix` as its `vsix` artifact.
 
 ## Requirements
 

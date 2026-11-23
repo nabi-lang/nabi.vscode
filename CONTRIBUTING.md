@@ -23,10 +23,10 @@ project's dual license.
 
 ## Releasing
 
-The extension is published as `nabi-lang.nabi` to the
-[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=nabi-lang.nabi)
-and [Open VSX](https://open-vsx.org/extension/nabi-lang/nabi). Its version is
-independent of the Nabi toolchain.
+The extension is not on the VS Code Marketplace or Open VSX yet; until it
+is, users build the `.vsix` and run `code --install-extension` (README,
+"Install"). Once the one-time setup below is done, a release publishes it as
+`nabi-lang.nabi` to both. Its version is independent of the Nabi toolchain.
 
 1. Bump `version` in `package.json` (`npm version X.Y.Z --no-git-tag-version`
    keeps `package-lock.json` in step) and add an `## X.Y.Z` entry to
