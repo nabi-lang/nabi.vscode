@@ -23,10 +23,8 @@ project's dual license.
 
 ## Releasing
 
-The extension is not on the VS Code Marketplace or Open VSX yet; until it
-is, users build the `.vsix` and run `code --install-extension` (README,
-"Install"). Once the one-time setup below is done, a release publishes it as
-`nabi-lang.nabi` to both. Its version is independent of the Nabi toolchain.
+A release publishes the extension as `nabi-lang.nabi` to the VS Code
+Marketplace and Open VSX. Its version is independent of the Nabi toolchain.
 
 1. Bump `version` in `package.json` (`npm version X.Y.Z --no-git-tag-version`
    keeps `package-lock.json` in step) and add an `## X.Y.Z` entry to
@@ -43,7 +41,9 @@ nabi-syntax, packages `nabi-X.Y.Z.vsix`, publishes it to both registries and
 attaches it to a GitHub release for the tag. The tag must match
 `package.json`.
 
-### One-time setup
+### Registry setup
+
+Done once, in place since 0.1.0:
 
 - VS Code Marketplace: a publisher `nabi-lang`
   (<https://marketplace.visualstudio.com/manage>) with a trusted publishing
@@ -54,7 +54,9 @@ attaches it to a GitHub release for the tag. The tag must match
   the publisher agreement), the namespace `nabi-lang`, and a trusted
   publisher on it for GitHub: repository `nabi-lang/nabi.vscode`, workflow
   `publish.yml`, no environment. No secret is stored; the workflow
-  publishes with `ovsx publish --trusted-publishing`.
+  publishes with `ovsx publish --trusted-publishing`. Open VSX registers a
+  trusted publisher only for an extension that already exists, so 0.1.0 went
+  up once with a short-lived token, revoked right after.
 
 If a release stops halfway, run the workflow by hand from main
 (Actions, Publish / Extension to the marketplaces, Run workflow) with the tag; versions already published
